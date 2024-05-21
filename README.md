@@ -94,7 +94,7 @@ Total log probability: -35154.69555932267
 Visualize in Dendroscope : ((((((fastp_Oreorchis_fargesii_S34,fastp_Oreorchis_bilamellata_S48),(fastp_Oreorchis_patens_S29)#H1),fastp_Oreorchis_coreana_S32),(((((#H1,fastp_Corallorhiza_striata_var_vreelandii_S7),fastp_Corallorhiza_bentleyi_S3),(fastp_Corallorhiza_trifida_S2,(fastp_Corallorhiza_wisteriana_Western_US_S28,fastp_Corallorhiza_maculata_var_occidentalis_S15))),(fastp_Oreorchis_indica1_S35,fastp_Oreorchis_erythrochrysea_S33)))#H2),fastp_Cremastra_appendiculata_S20),#H2);
 ```
 
-## 13. Repeat the analysis for however many numbers of H (0,1,2,3,4,5,...)
+## 13. Repeat the analysis for however many numbers of H (0,1,2,3,4,5,...). You need to directly edit the nexus file to do this.
 
 ## 14. Save the likelihood scores as a column in excel (or do this in R).
 
