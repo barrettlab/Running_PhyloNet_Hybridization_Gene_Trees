@@ -16,8 +16,9 @@ tre <- read.tree("treeshrink_bestparalog.treefile")
 ## 2. check to see that it is a multiphylo object
 ```{r}
 class(tre)
+
+"multiphylo"
 ```
-# "multiphylo"
 
 ## 3. specify tips to be pruned from tree
 ```{r}
