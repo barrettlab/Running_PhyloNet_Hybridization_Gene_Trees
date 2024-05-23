@@ -104,7 +104,7 @@ Visualize in Dendroscope : ((((((fastp_Oreorchis_fargesii_S34,fastp_Oreorchis_bi
 
  17. Calculate the delta AIC (AIC for value of H - minAIC) in excel.
 
- 18. Calculate AIC weights (wAIC) as "=EXP(-0.5*E3)" where the deltaAIC is in cell E3, and drag down. To get the actual AIC weights, divide each of these values by the sum of all of the "=EXP(-0.5*E3)" calcs. The AIC weights will sum to 1.
+ 18. Calculate AIC weights (wAIC) as "=EXP(-0.5* E3)" where the deltaAIC is in cell E3, and drag down. To get the actual AIC weights, divide each of these values by the sum of all of the "=EXP(-0.5*E3)" calcs. The AIC weights will sum to 1.
 
 ### Voila! 
 
