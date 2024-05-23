@@ -1,45 +1,45 @@
 # Part I. Running_PhyloNet_Hybridization_Gene_Trees
 
-## Preparing gene tree file and running Phylonet in R
+Preparing gene tree file and running Phylonet in R
 
 See the tutorial and citations therein (https://phylogenomics.rice.edu/html/phylonetTutorial.html)
 
-## 0. Load libraries in R
+ 0. Load libraries in R
 ```{r}
 library(phytools)
 ```
-## 1. in R, read in gene trees as a multiphylo object
+ 1. in R, read in gene trees as a multiphylo object
 ```{r}
 tre <- read.tree("treeshrink_bestparalog.treefile")
 ```
-## 2. check to see that it is a multiphylo object
+ 2. check to see that it is a multiphylo object
 ```{r}
 class(tre)
 
 "multiphylo"
 ```
 
-## 3. specify tips to be pruned from tree
+ 3. specify tips to be pruned from tree
 ```{r}
 taxa_to_drop<_c("fastp_Coelia_triptera_S10","fastp_Yoania_prainii_S14","fastp_Yoania_japonica_S12","fastp_Calypso_bulbosa_var_americana_S4","fastp_Calypso_bulbosa_Asia_S37","fastp_Changnienia_amoena_S44","fastp_Tipularia_japonica_S45","fastp_Corallorhiza_maculata_var_maculata2_S36","fastp_Corallorhiza_mertensiana_S30","fastp_Corallorhiza_maculata_var_mexicana_S17","fastp_Corallorhiza_macrantha_S21","fastp_Corallorhiza_bulbosa_S19","fastp_Corallorhiza_odontorhiza_var_odontorhiza2_S38","fastp_Corallorhiza_odontorhiza_var_pringlei_S25","fastp_Corallorhiza_odontorhiza_Mexico_S47","fastp_Corallorhiza_wisteriana_Eastern_US_S27","fastp_Corallorhiza_striata_var_striata_S5","fastp_Corallorhiza_striata_Sierra_Nevada_S9","fastp_Corallorhiza_striata_CA_Coast_Ranges_S11","fastp_Corallorhiza_involuta_S1","fastp_Oreorchis_indica2_S46","fastp_Cremastra_variabilis_S24","fastp_Cremastra_aphylla_S18","fastp_Cremastra_saprophytica_S22","fastp_Cremastra_unguiculata_S43","fastp_Aplectrum_hyemale_S8","fastp_Govenia_superba_S6","fastp_Govenia_capitata_S42","fastp_Dactylostalix_ringens_S39","fastp_Ephippianthus_schmidtii_S26","fastp_Ephippianthus_sawadanus_S31","fastp_Brassavola_glauca_S40")
 ```
-## 4. drop all tips except the ones you want to keep
+ 4. drop all tips except the ones you want to keep
 ```{r}
 pruned.tree<-drop.tip.multiPhylo(tre,taxa_to_drop)
 ```
-## 5. plot the first gene tree to see if it worked
+ 5. plot the first gene tree to see if it worked
 ```{r}
 plot(pruned.tree[[1]])
 ```
-## 6. write the tree to file
+ 6. write the tree to file
 ```{r}
 write.tree(pruned.tree,file="treeshrink_Calyps_subset.nex")
 ```
-## 7. You need to convert the tree to nexus format, either manually or via phytools:
+ 7. You need to convert the tree to nexus format, either manually or via phytools:
 ```{r}
 writeNexus(pruned.tree,file="nexustest.nex")
 ```
-## 8. You'll need to edit the nexus file to look like this:
+ 8. You'll need to edit the nexus file to look like this:
 
 ```bash
 
@@ -66,7 +66,7 @@ END;
 
 ```
 
-## 9. In the above, you need the PHYLONET block, with this general format
+ 9. In the above, you need the PHYLONET block, with this general format
 
 ```bash
 
@@ -80,12 +80,12 @@ END;
 
 ```
 
-## 10. Now, you are ready to run PHYLONET. These analyses for each H-value (# hybridizations) take 10-30 minutes.
-## 11. Running the block above specifies zero hybridizations, and essentially finds the "species tree"
+ 10. Now, you are ready to run PHYLONET. These analyses for each H-value (# hybridizations) take 10-30 minutes.
+ 11. Running the block above specifies zero hybridizations, and essentially finds the "species tree"
 ```bash
 java -jar /usr/local/src/PhyloNet.jar treeshrink_Calyps_subset.nex
 ```
-## 12. When finished, you'll get a bunch of output. Take the first of the final five trees and the likelihood score to calculate the AIC
+ 12. When finished, you'll get a bunch of output. Take the first of the final five trees and the likelihood score to calculate the AIC
 ```bash
 
 Inferred Network #1:
@@ -94,21 +94,21 @@ Total log probability: -35154.69555932267
 Visualize in Dendroscope : ((((((fastp_Oreorchis_fargesii_S34,fastp_Oreorchis_bilamellata_S48),(fastp_Oreorchis_patens_S29)#H1),fastp_Oreorchis_coreana_S32),(((((#H1,fastp_Corallorhiza_striata_var_vreelandii_S7),fastp_Corallorhiza_bentleyi_S3),(fastp_Corallorhiza_trifida_S2,(fastp_Corallorhiza_wisteriana_Western_US_S28,fastp_Corallorhiza_maculata_var_occidentalis_S15))),(fastp_Oreorchis_indica1_S35,fastp_Oreorchis_erythrochrysea_S33)))#H2),fastp_Cremastra_appendiculata_S20),#H2);
 ```
 
-## 13. Repeat the analysis for however many numbers of H (0,1,2,3,4,5,...). You need to directly edit the nexus file to do this.
+ 13. Repeat the analysis for however many numbers of H (0,1,2,3,4,5,...). You need to directly edit the nexus file to do this.
 
-## 14. Save the likelihood scores as a column in excel (or do this in R).
+ 14. Save the likelihood scores as a column in excel (or do this in R).
 
-## 15. The number of parameters (k) = the number of total internal + terminal branches in the tree PLUS the number of pre-specified hybridization events (k + H). Use these for AIC calcs, where AIC = 2*k - 2*lnL.
+ 15. The number of parameters (k) = the number of total internal + terminal branches in the tree PLUS the number of pre-specified hybridization events (k + H). Use these for AIC calcs, where AIC = 2*k - 2*lnL.
 
-## 16. Calulate AIC scores in excel with " =((2*C3)-(2*LN(B3)))" where the likelihood is in cell B3 and k is in B4.
+ 16. Calulate AIC scores in excel with " =((2*C3)-(2*LN(B3)))" where the likelihood is in cell B3 and k is in B4.
 
-## 17. Calculate the delta AIC (AIC for value of H - minAIC) in excel.
+ 17. Calculate the delta AIC (AIC for value of H - minAIC) in excel.
 
-## 18. Calculate AIC weights (wAIC) as "=EXP(-0.5*E3)" where the deltaAIC is in cell E3, and drag down.
+ 18. Calculate AIC weights (wAIC) as "=EXP(-0.5*E3)" where the deltaAIC is in cell E3, and drag down.
 
-# Voila! 
+### Voila! 
 
-## The H-values (# of hybridizations) with the lowest AIC and highest wAIC is the optimal. It could very well be zero.
+### The H-values (# of hybridizations) with the lowest AIC and highest wAIC is the optimal. It could very well be zero.
 
 # Part II. Analysis with PhyloNetworks
 
@@ -129,11 +129,11 @@ genetrees[3]
 using PhyloPlots
 plot(genetrees[3]); # tree for 3rd gene
 ```
-## 4. Calculate quartet Concordance Factors
+ 4. Calculate quartet Concordance Factors
 ```bash
 q,t = countquartetsintrees(genetrees);
 ```
-## 5. Write CFs to a table to save and view
+ 5. Write CFs to a table to save and view
 ```bash
 using CSV
 df = writeTableCF(q,t)   # data frame with observed CFs: gene frequencies
@@ -143,21 +143,21 @@ less("tableCF.csv")
 
 raxmlCF = readTrees2CF(genetrees, whichQ="rand", numQ=200, CFfile="tableCF10.txt")
 ```
-## 6. Get a starting tree -- in this case, the astral "species tree"
+ 6. Get a starting tree -- in this case, the astral "species tree"
 ```bash
 astraltree = readTopology("astral.tre")
 ```
-## 7. For multithreading/parallel jobs
+ 7. For multithreading/parallel jobs
 ```bash
 using Distributed
 addprocs(30)
 @everywhere using PhyloNetworks
 ```
-## 8. Run the first network analysis with H=0, essentially find the "species tree"
+ 8. Run the first network analysis with H=0, essentially find the "species tree"
 ```bash
 net0 = snaq!(astraltree,raxmlCF, hmax=0, filename="net0", seed=1234)
 ```
-## 9. Got booted out of julia for some reason, needed to start over!
+ 9. Got booted out of julia for some reason, needed to start over!
 ```bash
 using PhyloPlots
 q,t = countquartetsintrees(genetrees); # read in trees, calculate quartet CFs
@@ -171,17 +171,17 @@ raxmlCF = readTrees2CF(genetrees, whichQ="rand", numQ=200, CFfile="tableCF10.txt
 astraltree = readTopology("astral.tre")
 plot(astraltree, showedgelength=true);
 ```
-## 10 Run the first network analysis with H=0, essentially find the "species tree"
+ 10 Run the first network analysis with H=0, essentially find the "species tree"
 ```bash
 net0 = snaq!(astraltree,raxmlCF, hmax=0, filename="net0", seed=1234)
 ```
-## 11. Copy the log-likelihood from the screen output after run finishes, or get from "net0.out" file
+ 11. Copy the log-likelihood from the screen output after run finishes, or get from "net0.out" file
 
-## 12. Run the second network analysis with H=1, allowing 1 hybridization event, using 'net0' as starting tree
+ 12. Run the second network analysis with H=1, allowing 1 hybridization event, using 'net0' as starting tree
 ```bash
 net1 = snaq!(net0, raxmlCF, hmax=1, filename="net1", seed=2345) # this runs for ~30 min
 ```
-## 13. Check out the output
+ 13. Check out the output
 ```bash
 plot(net1, showgamma=true);
 less("net1.err") # would provide info about errors, if any
@@ -189,16 +189,16 @@ less("net1.out") # main output file with the estimated network from each run
 less("net1.networks") # extra info
 net1
 ```
-## 14. Save the network file
+ 14. Save the network file
 ```bash
 writeTopology(net1, round=true, digits=2)
 ```
-## 15. Run the third network analysis with H=2, allowing 2 hybridization events, using 'net0' as starting tree
+ 15. Run the third network analysis with H=2, allowing 2 hybridization events, using 'net0' as starting tree
 ```bash
 net2 = snaq!(net0,raxmlCF, hmax=2, filename="net2", seed=3456)
 plot(net2, showgamma=true);
 ```
-## 16. Run the rest of the analyses analysis with H=3-5, allowing 3-5 hybridization events, using 'net0' as starting tree
+ 16. Run the rest of the analyses analysis with H=3-5, allowing 3-5 hybridization events, using 'net0' as starting tree
 ### Save the likelihoods for AIC calcs
 
 ```bash
