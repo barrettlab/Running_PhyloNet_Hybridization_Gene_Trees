@@ -1,5 +1,4 @@
-# Running_PhyloNet_Hybridization_Gene_Trees
-# Running_PhyloNet_Hybridization_Gene_Trees
+# Part I. Running_PhyloNet_Hybridization_Gene_Trees
 
 ## Preparing gene tree file and running Phylonet in R
 
@@ -111,6 +110,102 @@ Visualize in Dendroscope : ((((((fastp_Oreorchis_fargesii_S34,fastp_Oreorchis_bi
 
 ## The H-values (# of hybridizations) with the lowest AIC and highest wAIC is the optimal. It could very well be zero.
 
+# Part II. Analysis with PhyloNetworks
+
+Following (https://crsl4.github.io/PhyloNetworks.jl/dev/man/snaq_plot/)
+
+ 1. Start julia and add phylonetworks
+```bash
+julia
+using PhyloNetworks
+```
+ 2. Read in gene trees, view tree #3
+```bash
+genetrees = readMultiTopology("calyps_phylonetworks.tre");
+genetrees[3]
+```
+ 3. Load phyloplots and plot tree #3
+```bash
+using PhyloPlots
+plot(genetrees[3]); # tree for 3rd gene
+```
+## 4. Calculate quartet Concordance Factors
+```bash
+q,t = countquartetsintrees(genetrees);
+```
+## 5. Write CFs to a table to save and view
+```bash
+using CSV
+df = writeTableCF(q,t)   # data frame with observed CFs: gene frequencies
+CSV.write("tableCF.csv", df); # to save the data frame to a file
+raxmlCF = readTableCF("tableCF.csv") # read in the file and produces a "DataCF" object
+less("tableCF.csv")
+
+raxmlCF = readTrees2CF(genetrees, whichQ="rand", numQ=200, CFfile="tableCF10.txt")
+```
+## 6. Get a starting tree -- in this case, the astral "species tree"
+```bash
+astraltree = readTopology("astral.tre")
+```
+## 7. For multithreading/parallel jobs
+```bash
+using Distributed
+addprocs(30)
+@everywhere using PhyloNetworks
+```
+## 8. Run the first network analysis with H=0, essentially find the "species tree"
+```bash
+net0 = snaq!(astraltree,raxmlCF, hmax=0, filename="net0", seed=1234)
+```
+## 9. Got booted out of julia for some reason, needed to start over!
+```bash
+using PhyloPlots
+q,t = countquartetsintrees(genetrees); # read in trees, calculate quartet CFs
+df = writeTableCF(q,t)
+
+using CSV
+CSV.write("tableCF.csv", df);
+raxmlCF = readTableCF("tableCF.csv")
+raxmlCF = readTrees2CF(genetrees, whichQ="rand", numQ=200, CFfile="tableCF10.txt")
+
+astraltree = readTopology("astral.tre")
+plot(astraltree, showedgelength=true);
+```
+## 10 Run the first network analysis with H=0, essentially find the "species tree"
+```bash
+net0 = snaq!(astraltree,raxmlCF, hmax=0, filename="net0", seed=1234)
+```
+## 11. Copy the log-likelihood from the screen output after run finishes, or get from "net0.out" file
+
+## 12. Run the second network analysis with H=1, allowing 1 hybridization event, using 'net0' as starting tree
+```bash
+net1 = snaq!(net0, raxmlCF, hmax=1, filename="net1", seed=2345) # this runs for ~30 min
+```
+## 13. Check out the output
+```bash
+plot(net1, showgamma=true);
+less("net1.err") # would provide info about errors, if any
+less("net1.out") # main output file with the estimated network from each run
+less("net1.networks") # extra info
+net1
+```
+## 14. Save the network file
+```bash
+writeTopology(net1, round=true, digits=2)
+```
+## 15. Run the third network analysis with H=2, allowing 2 hybridization events, using 'net0' as starting tree
+```bash
+net2 = snaq!(net0,raxmlCF, hmax=2, filename="net2", seed=3456)
+plot(net2, showgamma=true);
+```
+## 16. Run the rest of the analyses analysis with H=3-5, allowing 3-5 hybridization events, using 'net0' as starting tree
+### Save the likelihoods for AIC calcs
+
+```bash
+net3 = snaq!(net0,raxmlCF, hmax=3, filename="net3", seed=4567)
+net4 = snaq!(net0,raxmlCF, hmax=4, filename="net4", seed=1437)
+net5 = snaq!(net0,raxmlCF, hmax=5, filename="net5", seed=8701)
+```
 
 
 
